@@ -20,17 +20,20 @@
 -->
 
 <template>
-	<h3>
+	<h3
+		:class="{ 'setting-property': isSettingProperty }">
 		<label :for="labelFor">
 			{{ t('settings', accountProperty) }}
 		</label>
 
-		<FederationControl
-			class="federation-control"
-			:account-property="accountProperty"
-			:handle-scope-change="handleScopeChange"
-			:scope.sync="localScope"
-			@update:scope="onScopeChange" />
+		<template v-if="scope && handleScopeChange">
+			<FederationControl
+				class="federation-control"
+				:account-property="accountProperty"
+				:handle-scope-change="handleScopeChange"
+				:scope.sync="localScope"
+				@update:scope="onScopeChange" />
+		</template>
 
 		<template v-if="isEditable && isMultiValueSupported">
 			<AddButton
@@ -45,7 +48,7 @@
 import AddButton from './AddButton'
 import FederationControl from './FederationControl'
 
-import { ACCOUNT_PROPERTY_READABLE_ENUM } from '../../../constants/AccountPropertyConstants'
+import { ACCOUNT_PROPERTY_READABLE_ENUM, SETTING_PROPERTY_READABLE_ENUM } from '../../../constants/AccountPropertyConstants'
 
 export default {
 	name: 'HeaderBar',
@@ -59,11 +62,11 @@ export default {
 		accountProperty: {
 			type: String,
 			required: true,
-			validator: (value) => Object.values(ACCOUNT_PROPERTY_READABLE_ENUM).includes(value),
+			validator: (value) => Object.values(ACCOUNT_PROPERTY_READABLE_ENUM).includes(value) || Object.values(SETTING_PROPERTY_READABLE_ENUM).includes(value),
 		},
 		handleScopeChange: {
 			type: Function,
-			required: true,
+			default: null,
 		},
 		isEditable: {
 			type: Boolean,
@@ -83,7 +86,7 @@ export default {
 		},
 		scope: {
 			type: String,
-			required: true,
+			default: null,
 		},
 	},
 
@@ -91,6 +94,12 @@ export default {
 		return {
 			localScope: this.scope,
 		}
+	},
+
+	computed: {
+		isSettingProperty() {
+			return Object.values(SETTING_PROPERTY_READABLE_ENUM).includes(this.accountProperty)
+		},
 	},
 
 	methods: {
@@ -106,6 +115,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	h3.setting-property {
+		min-height: 37px;
+		position: relative;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+
+		label {
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+	}
+
 	.federation-control {
 		margin: -12px 0 0 8px;
 	}
