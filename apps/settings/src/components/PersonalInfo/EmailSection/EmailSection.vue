@@ -175,9 +175,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	form::v-deep button {
-		&:disabled {
-			cursor: default;
-		}
+form::v-deep button {
+	&:disabled {
+		cursor: default;
 	}
+}
 </style>

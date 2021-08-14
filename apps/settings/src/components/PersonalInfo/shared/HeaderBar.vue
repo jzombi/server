@@ -67,7 +67,7 @@ export default {
 		},
 		isEditable: {
 			type: Boolean,
-			required: true,
+			default: true,
 		},
 		isMultiValueSupported: {
 			type: Boolean,
@@ -75,7 +75,7 @@ export default {
 		},
 		isValidForm: {
 			type: Boolean,
-			default: true,
+			default: false,
 		},
 		labelFor: {
 			type: String,
